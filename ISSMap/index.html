@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+</head>
+<style>
+    #ISSmap{
+        height: 500px;
+    }
+
+</style>
+<body>
+    <h1>Where is the ISS??</h1>
+
+    <p>Latitude: <span id='lat'></span></p>
+    <p>Longitude: <span id='lng'></span></p>
+    <p>speed: <span id='speed'></span></p>
+
+    <div id='ISSmap'></div>
+
+</body>
+
+    <script>
+
+
+        // Making a map and tiles
+        var mymap = L.map('ISSmap').setView([0, 0], 1);
+        const attribution = '&copy; <a href="https://openstreetmap.org/copyright">Tiles from OpenStreetmap Contributors </a>; ';
+        const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        const tiles = L.tileLayer(tileUrl, {attribution});
+        tiles.addTo(mymap);
+
+        let firstTimeLoading = true;
+
+
+        // Make marker with Custom Icon
+        const myIcon = L.icon({
+            iconUrl: 'issIcon.png',
+            iconSize: [50, 32],
+            iconAnchor: [25, 16],
+        });
+
+        //Store the url for the API
+        const api_url = 'https://api.wheretheiss.at/v1/satellites/25544';
+
+        //Add the Marker to the Map
+        marker = L.marker([0, 0], {icon: myIcon}).addTo(mymap);
+
+        //Initialize the function to get the space staion
+        async function getISS(){
+            
+            //Fetch the response from the api_url and store the response in a variable 
+            const response = await fetch(api_url);
+            
+            // Store the JSON data in a variable called data.
+            const data = await response.json();
+            // console.log(data);
+            
+            //Get the latitude, longitude and velocity of the data object.
+            const {latitude, longitude, velocity} = data; //Same as saying const lat = data.latitude, etc.
+
+            // Position the marker at the latitude and longitude from the data object. setLatLng is called from the Leaflet library.
+            marker.setLatLng([latitude, longitude]);
+
+            if(firstTimeLoading){
+                // Set the view of the map to center on the map pin.
+                mymap.setView([latitude, longitude], 3);
+                firstTimeLoading = false;
+            }
+
+            //Display the lat, lng, and speed in the HTML elements.
+            document.getElementById('lat').textContent = latitude.toFixed(); //tooFixed() just rounds down.
+            document.getElementById('lng').textContent = longitude.toFixed();
+            document.getElementById('speed').textContent = velocity;
+            //console.log('POSITION UPDATED to LAT: ' + latitude + ' ' + 'LNG: ' + longitude);
+        }
+        //Initialize loading on INterval
+        var loadAtInterval = window.setInterval(getISS, 2500);
+
+        //Gets the position of the ISS on page Load
+        getISS();
+
+    </script>
+
+</html>
+
