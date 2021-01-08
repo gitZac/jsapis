@@ -29,8 +29,6 @@
 </body>
 
     <script>
-
-
         // Making a map and tiles
         var mymap = L.map('ISSmap').setView([0, 0], 1);
         const attribution = '&copy; <a href="https://openstreetmap.org/copyright">Tiles from OpenStreetmap Contributors </a>; ';
@@ -39,7 +37,6 @@
         tiles.addTo(mymap);
 
         let firstTimeLoading = true;
-
 
         // Make marker with Custom Icon
         const myIcon = L.icon({
@@ -56,17 +53,15 @@
 
         //Initialize the function to get the space staion
         async function getISS(){
-            
             //Fetch the response from the api_url and store the response in a variable 
             const response = await fetch(api_url);
-            
+
             // Store the JSON data in a variable called data.
+            
             const data = await response.json();
             // console.log(data);
-            
             //Get the latitude, longitude and velocity of the data object.
             const {latitude, longitude, velocity} = data; //Same as saying const lat = data.latitude, etc.
-
             // Position the marker at the latitude and longitude from the data object. setLatLng is called from the Leaflet library.
             marker.setLatLng([latitude, longitude]);
 
@@ -82,12 +77,12 @@
             document.getElementById('speed').textContent = velocity;
             //console.log('POSITION UPDATED to LAT: ' + latitude + ' ' + 'LNG: ' + longitude);
         }
+
         //Initialize loading on INterval
         var loadAtInterval = window.setInterval(getISS, 2500);
 
         //Gets the position of the ISS on page Load
         getISS();
-
     </script>
 
 </html>
