@@ -8,7 +8,6 @@ if ('geolocation' in navigator){
         lng = position.coords.longitude;
         document.getElementById('Latitude').textContent = lat;
         document.getElementById('Longitude').textContent = lng;
-        
         // Store the latitude and longitude in an object that we will send to the server.
         const data = {lat, lng};
 
@@ -31,7 +30,7 @@ if ('geolocation' in navigator){
         console.log('Response from the server below: ');
         console.log(json.status);
         console.log(json.latitude);
-        console.log(json.longitude);        
+        console.log(json.longitude);       
       });
 } else {
     console.log('Not found');
