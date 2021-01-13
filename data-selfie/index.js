@@ -18,14 +18,12 @@ app.post('/api', (request, response) => {
     const timestamp = Date.now();
     data.timestamp = timestamp;
 
+    const confirmation = 'Your Request has been received!';
+    data.confirmation = confirmation;
+
     //Insert client data into the database.
     database.insert(data);
     
     //Sends a json object RESPONSE that we created back to client with the lat lng data from the REQUEST.
-    response.json({
-        status: 'Success!',
-        timestamp: timestamp,
-        latitude: data.lat,
-        longitude: data.lng
-    });
+    response.json(data);
 });
