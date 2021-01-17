@@ -6,24 +6,46 @@
     <title>Document</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.min.js" integrity="sha512-b/htz6gIyFi3dwSoZ0Uv3cuv3Ony7EeKkacgrcVg8CMzu90n777qveu0PBcbZUA7TzyENGtU+qZRuFAkfqgyoQ==" crossorigin="anonymous"></script>
 </head>
+<style>
+    
+</style>
 <body>
     <div><a href="/">Home</a> | <a href="all.html">All</a></div>
     <h1>All</h1>
 
+
 </body>
 <footer>
-    <!-- <script src='src/js/main.js'></script> -->
 </footer>
 
 <script>
 
-    async function getServer(){
-        
+    getData();
+    async function getData(){
+        const response = await fetch('api/');
+        const data = await response.json();
+        for(item of data){
+            const root = document.createElement('p');
+            const mood = document.createElement('div');
+            const date = document.createElement('div');
+            const geo = document.createElement('div');
+            const image = document.createElement('img');
 
+            image.src = item.image64;
+
+
+            const dateString = new Date(item.timestamp).toLocaleString();
+
+            mood.textContent = `mood: ${item.mood}`
+            geo.textContent = `${item.lat}, ${item.lng}`;
+            date.textContent = dateString;
+            image.textContent = `${item.image64}`
+
+            root.append(mood,geo,date, image);
+            document.body.append(root);
+        }
+        console.log(data);
     }
-
-    getServer();
-
 
 
 </script>

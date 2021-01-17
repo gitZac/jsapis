@@ -9,6 +9,16 @@ app.use(express.json({limit: '1mb'}));
 const database = new Datastore('database.db');
 database.loadDatabase();
 
+app.get('/api' , (request, response) => {
+    database.find({},(err, data) => {
+        if(err) {
+            response.end();
+            return;
+        }
+        response.json(data);
+    });
+});
+
 app.post('/api', (request, response) => {
     console.log('REQUEST RECEIVED with the client data below: ');
     //Log the request received from the client to the console.
